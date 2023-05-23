@@ -5,23 +5,25 @@ Public Class Form1
     Private Sub Button1_Click(sender As Object, e As EventArgs) Handles Button1.Click
         With Me
             Call Connecting_to_DB()
-            Dim mycmd As New MySqlCommand
-            Dim myreader As MySqlDataReader
+            Dim username = TextBox1.Text
+            Dim password = TextBox2.Text
+
+            strSQL = $"SELECT * FROM sampledb.users where username = '{username}' and password = '{password}' limit 1;"
 
 
-            strSQL = "Select * from users where username = '" _
-                & .TextBox1.Text & "' and password = '" _
-                & .TextBox2.Text & "'"
-            'MsgBox(strSQL)
-            mycmd.CommandText = strSQL
-            mycmd.Connection = myconn
+            Dim cmd As New MySqlCommand
+            cmd.Connection = myconn
+            cmd.CommandText = strSQL
 
-            myreader = mycmd.ExecuteReader
-            If myreader.HasRows Then
-                .Hide()
+            Dim reader As MySqlDataReader = cmd.ExecuteReader()
+
+            If reader.HasRows Then
+                MessageBox.Show("Success Login", "Welcome")
                 Form2.Show()
+                Hide()
+
             Else
-                MessageBox.Show("Invalid username or password")
+                MessageBox.Show("Invalid Email or Password", "Login Error")
             End If
             Call Disconnecting_to_DB()
         End With
@@ -29,16 +31,15 @@ Public Class Form1
     Private Sub Button2_Click(sender As Object, e As EventArgs) Handles Button2.Click
         Me.Close()
     End Sub
+    Private Sub TextBox1_TextChanged(sender As Object, e As EventArgs) Handles TextBox1.TextChanged
 
-    Private Sub CheckBox1_CheckedChanged(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles CheckBox1.CheckedChanged
-        If CheckBox1.Checked = True Then
-            TextBox2.UseSystemPasswordChar = False
-        Else
-            TextBox2.UseSystemPasswordChar = True
-        End If
     End Sub
 
-    Private Sub TextBox1_TextChanged(sender As Object, e As EventArgs) Handles TextBox1.TextChanged
+    Private Sub Label1_Click(sender As Object, e As EventArgs) Handles Label1.Click
+
+    End Sub
+
+    Private Sub TextBox2_TextChanged(sender As Object, e As EventArgs) Handles TextBox2.TextChanged
 
     End Sub
 End Class
